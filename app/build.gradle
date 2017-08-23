@@ -1,0 +1,62 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.3"
+    defaultConfig {
+        applicationId "com.janus.advancedgradledemo"
+        minSdkVersion 14
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        buildConfigField 'String', 'TTT', '"TTTTTT"'
+        manifestPlaceholders = [UMENG_CHANNEL: "0", UMENG_APPKEY: "123456789"]
+    }
+    buildTypes {
+        debug {
+            buildConfigField 'boolean', 'PROXY', 'true'
+            buildConfigField 'String', 'API_HOST', '"http://dev.example.com/"'
+        }
+        qa {
+            buildConfigField 'boolean', 'PROXY', 'true'
+            buildConfigField 'String', 'API_HOST', '"http://qa.example.com/"'
+        }
+        release {
+            buildConfigField 'boolean', 'PROXY', 'false'
+            buildConfigField 'String', 'API_HOST', '"https://example.com/v1/"'
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+        oea {
+            applicationId "com.janus.oea.advancedgradledemo"
+            applicationIdSuffix ".plus"
+            //这样最终的包名是 com.janus.oea.advancedgradledemo.plus
+            versionCode 1
+            versionName "1.0.0"
+            manifestPlaceholders = [APP_NAME: "APP_OEA"]
+            buildConfigField 'String', 'OEM', '"OEA"'//BuuildConfig配置
+        }
+        oeb {
+            applicationId "com.janus.oeb.advancedgradledemo"
+            versionCode 2
+            versionName "1.2.0"
+            manifestPlaceholders = [APP_NAME: "APP_OEB"]
+            buildConfigField 'String', 'OEM', '"OEB"'//BuuildConfig配置
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    oeaCompile project(':oea')
+    oebCompile project(':oeb')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    testCompile 'junit:junit:4.12'
+}
